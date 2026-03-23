@@ -1,0 +1,306 @@
+[
+    {
+        "id": "db612f0c33cb39b0",
+        "type": "tab",
+        "label": "流程1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b9fad9af44d81838",
+        "type": "mysql",
+        "z": "db612f0c33cb39b0",
+        "mydb": "b16c68df2b5783af",
+        "name": "",
+        "x": 560,
+        "y": 360,
+        "wires": [
+            [
+                "1c2e3a2b926ab9a7"
+            ]
+        ]
+    },
+    {
+        "id": "9c7a26c9d12a93c9",
+        "type": "function",
+        "z": "db612f0c33cb39b0",
+        "name": "read database",
+        "func": "msg.topic = \"SELECT * FROM `music` WHERE `id` = \" + msg.payload + \";\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 360,
+        "wires": [
+            [
+                "b9fad9af44d81838"
+            ]
+        ]
+    },
+    {
+        "id": "1c2e3a2b926ab9a7",
+        "type": "function",
+        "z": "db612f0c33cb39b0",
+        "name": "function 1",
+        "func": "flow.set(\"music\", msg.payload[0])\nmsg.payload=msg.payload[0]\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 360,
+        "wires": [
+            [
+                "68f998a59b5f59a0"
+            ]
+        ]
+    },
+    {
+        "id": "14a02f44821245b4",
+        "type": "mqtt out",
+        "z": "db612f0c33cb39b0",
+        "name": "",
+        "topic": "11146081/music",
+        "qos": "2",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "2b6a34ba47c1a75f",
+        "x": 600,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "24ed58a5a913f4f6",
+        "type": "ui_slider",
+        "z": "db612f0c33cb39b0",
+        "name": "",
+        "label": "",
+        "tooltip": "",
+        "group": "7a33923940c9e3be",
+        "order": 1,
+        "width": 6,
+        "height": 1,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "1023",
+        "step": 1,
+        "className": "",
+        "x": 230,
+        "y": 220,
+        "wires": [
+            [
+                "8e3d8f7a80a5f269",
+                "5d6796e5298770a5"
+            ]
+        ]
+    },
+    {
+        "id": "8e3d8f7a80a5f269",
+        "type": "ui_text",
+        "z": "db612f0c33cb39b0",
+        "group": "7a33923940c9e3be",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "duty",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 370,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "5d6796e5298770a5",
+        "type": "function",
+        "z": "db612f0c33cb39b0",
+        "name": "function 2",
+        "func": "flow.set(\"duty\",msg.payload)\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3c42bed752c24581",
+        "type": "ui_numeric",
+        "z": "db612f0c33cb39b0",
+        "name": "",
+        "label": "歌曲",
+        "tooltip": "",
+        "group": "7a33923940c9e3be",
+        "order": 4,
+        "width": 6,
+        "height": 1,
+        "wrap": false,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "4",
+        "step": 1,
+        "className": "",
+        "x": 210,
+        "y": 360,
+        "wires": [
+            [
+                "9c7a26c9d12a93c9"
+            ]
+        ]
+    },
+    {
+        "id": "68f998a59b5f59a0",
+        "type": "ui_text",
+        "z": "db612f0c33cb39b0",
+        "group": "7a33923940c9e3be",
+        "order": 3,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "歌曲名稱",
+        "format": "{{msg.payload.name}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 860,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8320db1b8963a738",
+        "type": "function",
+        "z": "db612f0c33cb39b0",
+        "name": "function 3",
+        "func": "\nmsg.payload = flow.get(\"music\");  \nmsg.payload.duty = Math.round(flow.get(\"duty\") || 512);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 420,
+        "wires": [
+            [
+                "14a02f44821245b4"
+            ]
+        ]
+    },
+    {
+        "id": "cdd49d28fb5b04c8",
+        "type": "ui_button",
+        "z": "db612f0c33cb39b0",
+        "name": "",
+        "group": "7a33923940c9e3be",
+        "order": 5,
+        "width": 6,
+        "height": 1,
+        "passthru": false,
+        "label": "確認",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 210,
+        "y": 420,
+        "wires": [
+            [
+                "8320db1b8963a738"
+            ]
+        ]
+    },
+    {
+        "id": "b16c68df2b5783af",
+        "type": "MySQLdatabase",
+        "name": "arduino",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "arduino",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "2b6a34ba47c1a75f",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "https://broker.mqttgo.io/",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "7a33923940c9e3be",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "a0d9150aaea65848",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a0d9150aaea65848",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
